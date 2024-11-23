@@ -17,6 +17,25 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _errorMessage;
 
   @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  // Vérification du token au démarrage de l'application
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('authToken');
+
+    if (token != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen(role: prefs.getString('userRole') ?? 'user')),
+      );
+    }
+  }
+
+  @override
   void dispose() {
     // Nettoyer les contrôleurs pour éviter les fuites de mémoire
     _emailController.dispose();
@@ -52,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Fonction pour valider une adresse email
   bool _isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zAZ0-9.-]+\.[a-zA-Z]{2,}$');
     return emailRegex.hasMatch(email);
   }
 

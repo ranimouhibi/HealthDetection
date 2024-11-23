@@ -8,7 +8,6 @@ class HomeScreen extends StatelessWidget {
 
   const HomeScreen({super.key, required this.role});
 
-  // Fonction de déconnexion
   Future<void> logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // Supprime toutes les données sauvegardées
@@ -62,24 +61,11 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
-            ] else ...[
-              ListTile(
-                title: const Text('Ajouter un mouton'),
-                onTap: () {
-                  // Navigation vers la page d'ajout de moutons
-                },
-              ),
-              ListTile(
-                title: const Text('Liste des moutons'),
-                onTap: () {
-                  // Navigation vers la liste des moutons
-                },
-              ),
             ],
             ListTile(
               title: const Text('Se déconnecter'),
               onTap: () {
-                logout(context); // Appel de la fonction de déconnexion
+                logout(context); 
               },
             ),
           ],
