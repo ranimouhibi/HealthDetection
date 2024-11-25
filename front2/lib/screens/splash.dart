@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,20 +15,13 @@ class _SplashScreenState extends State<SplashScreen>
 
   // Vérifier le statut de connexion
   Future<void> _checkLoginStatus() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('authToken'); // Récupérer le token
-      await Future.delayed(const Duration(seconds: 2)); // Délai pour le splash
-      if (token != null) {
-        Navigator.pushReplacementNamed(context, '/home'); // Rediriger vers Home
-      } else {
-        Navigator.pushReplacementNamed(context, '/login'); // Rediriger vers Login
-      }
-    } catch (e) {
-      // Afficher une erreur en cas de problème
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('authToken'); // Récupérer le token
+    await Future.delayed(const Duration(seconds: 3)); // Délai pour le splash
+    if (token != null) {
+      Navigator.pushReplacementNamed(context, '/home'); // Rediriger vers Home
+    } else {
+      Navigator.pushReplacementNamed(context, '/login'); // Rediriger vers Login
     }
   }
 
@@ -46,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
     _controller.forward();
 
-    // Vérifier le statut de connexion après un court délai
+    // Vérifier le statut de connexion
     _checkLoginStatus();
   }
 
@@ -59,25 +50,41 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: FadeTransition(
-          opacity: _animation,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.person,
-                size: 100,
-                color: Colors.blue,
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Bienvenue',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ],
+      body: Stack(
+        children: [
+          // Image de fond
+          Positioned.fill(
+            child: Image.asset(
+              'assets/img/background1.jpg', // Chemin de votre image d'arrière-plan
+              fit: BoxFit.cover, // Ajuste l'image pour couvrir tout l'écran
+            ),
           ),
-        ),
+          // Contenu principal (logo et texte)
+          Center(
+            child: FadeTransition(
+              opacity: _animation,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/img/splash.png', // Logo
+                    width: 200,
+                    height: 200,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Cheep Helper',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
